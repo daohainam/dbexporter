@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DBExporter": {
+      "commandName": "Project",
+      "commandLineArgs": "\"Server=.;Database=US_Z_V19;Trusted_Connection=True;TrustServerCertificate=True;\" \"SELECT * FROM Artikkel\" -f:artikkel"
+    }
+  }
+}
