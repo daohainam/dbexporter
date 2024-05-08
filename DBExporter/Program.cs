@@ -14,7 +14,7 @@ namespace DBExporter
 
             try
             {
-                var optionBuilder = new DatabaseExportOptionsBuilder(args);
+                var optionBuilder = new DatabaseExportOptionsBuilder(args, [SourceOptionsValidator.Instance]);
                 options = optionBuilder.Build();
             }
             catch (Exception ex)

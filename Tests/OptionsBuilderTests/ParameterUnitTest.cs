@@ -8,7 +8,7 @@ namespace OptionsBuilderTests
         [InlineData("Server=.;Database=Test", "SELECT * FROM table", "-f:filename", "-server:SqlServer", "-format:csv", "-compress", "-adt")]
         public void ParseValidArgsTest(params string[] args)
         {
-            var builder = new DatabaseExportOptionsBuilder(args)
+            var builder = new DatabaseExportOptionsBuilder(args, [])
             {
                 CurrentTimeFunc = () => new DateTime(2024, 05, 01, 23, 59, 59)
             };

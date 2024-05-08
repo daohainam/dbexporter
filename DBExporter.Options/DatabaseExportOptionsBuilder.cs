@@ -13,12 +13,14 @@ namespace DBExporter.Options
     public class DatabaseExportOptionsBuilder
     {
         private readonly string[] args;
+        private readonly IEnumerable<IDatabaseExportOptionsValidator> validators;
 
         public Func<DateTime> CurrentTimeFunc { get; set; } = () => DateTime.Now;
         public string FileDateTimeFormat { get; set; } = "yyyyddMM-HHmmss";
 
-        public DatabaseExportOptionsBuilder(string[] args) { 
+        public DatabaseExportOptionsBuilder(string[] args, IEnumerable<IDatabaseExportOptionsValidator> validators) { 
             this.args = args;
+            this.validators = validators ?? [];
         }
 
         public DatabaseExportOptions Build() {
@@ -37,7 +39,6 @@ namespace DBExporter.Options
             int i = 0;
 
             options.DatabaseOptions.ConnectionString = args[i++];
-            options.DatabaseOptions.SelectQuery = args[i++];
 
             for (; i < args.Length; i++)
             {
@@ -83,6 +84,14 @@ namespace DBExporter.Options
                 {
                     options.ExportOptions.AppendExportTimeToFileName = true;
                 }
+                else if (arg.StartsWith("-q:"))
+                {
+                    options.DatabaseOptions.SelectQuery = arg[3..];
+                }
+                else if (arg.StartsWith("-t:"))
+                {
+                    options.DatabaseOptions.SelectQuery = arg[3..];
+                }
                 else
                 {
                     throw new ArgumentException($"Unknown option: {arg}");
@@ -113,6 +122,11 @@ namespace DBExporter.Options
 
         protected DatabaseExportOptions Validate(DatabaseExportOptions options)
         {
+            foreach (var arg in validators)
+            {
+                arg.Validate(options);
+            }
+
             return options;
         }
     }

@@ -4,7 +4,7 @@
     {
         public string ConnectionString { get; set; } = string.Empty;
         public string SelectQuery { get; set; } = string.Empty;
-        public string TableName { get; set; } = string.Empty;
+        public string TableNames { get; set; } = string.Empty; // a comma-separated table list
         public ServerTypes ServerType { get; set; } = ServerTypes.SqlServer;
     }
 }
