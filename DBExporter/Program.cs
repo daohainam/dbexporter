@@ -58,21 +58,23 @@ namespace DBExporter
 
         private static void ExportToZipFile(ExportSource database, ExportOptions exportOptions)
         {
-            using FileStream zipFile = new(exportOptions.FileName, FileMode.OpenOrCreate);
-            using ZipArchive archive = new(zipFile, ZipArchiveMode.Update);
-            var entryName = Path.GetFileName(exportOptions.FileName);
-
-            if (Path.GetExtension(entryName).EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+            using FileStream zipFile = new(exportOptions.FileName, FileMode.Create);
+            using (ZipArchive archive = new(zipFile, ZipArchiveMode.Update))
             {
-                entryName = Path.GetFileNameWithoutExtension(entryName);
+                var entryName = Path.GetFileName(exportOptions.FileName);
+
+                if (Path.GetExtension(entryName).EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                {
+                    entryName = Path.GetFileNameWithoutExtension(entryName);
+                }
+
+                ZipArchiveEntry zipEntry = archive.CreateEntry(entryName);
+                var stream = zipEntry.Open();
+
+                Export(database, stream, exportOptions);
+
+                stream.Flush();
             }
-
-            ZipArchiveEntry zipEntry = archive.CreateEntry(entryName);
-            using var stream = zipEntry.Open();
-
-            Export(database, stream, exportOptions);
-
-            stream.Close();
             zipFile.Close();
         }
 

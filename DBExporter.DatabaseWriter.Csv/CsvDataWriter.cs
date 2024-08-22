@@ -19,7 +19,7 @@ namespace DBExporter.DatabaseWriter.Csv
 
         public void WriteData(ExportSource database, Stream stream)
         {
-            using var writer = new StreamWriter(stream);
+            using var writer = new StreamWriter(stream, leaveOpen: true);
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
 
             var columns = database.Reader.GetColumnSchema();
